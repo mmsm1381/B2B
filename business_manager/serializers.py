@@ -1,15 +1,26 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import SysTransaction
 
+User = get_user_model()
+
+class ConsumerForeignKey(serializers.PrimaryKeyRelatedField):
+
+    def get_queryset(self):
+        return User.objects.filter(is_superuser=False).exclude(id=self.context['request'].user.id)
+
+
 
 class SysTransactionSerializer(serializers.ModelSerializer):
 
+    consumer = ConsumerForeignKey()
+    provider = serializers.StringRelatedField()
 
     class Meta: 
         model = SysTransaction
-        fields = ("consumer","amount","provider",)
-        read_only_fields = ['provider']
+        fields = ("provider","amount","consumer",'status',)
+        read_only_fields = ['provider',"status",]
 
 
     def create(self, validated_data):
