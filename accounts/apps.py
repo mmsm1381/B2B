@@ -6,6 +6,6 @@ class AccountsConfig(AppConfig):
     name = 'accounts'
 
     def ready(self) -> None:
-        from .groups import create_credit_provider_group as group_maker
-        group_maker()
+        from .groups import create_credit_provider_group 
+        from .signals import give_per_to_credit_provider
         return super().ready()

@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
@@ -25,10 +24,7 @@ class CreditProviderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['is_staff'] = True
-        credit_provider = super().create(validated_data)
-        credit_provider_group = Group.objects.get(name='credit_provider')
-        credit_provider_group.add(credit_provider)
-        return credit_provider
+        return super().create(validated_data)
 
 
 
