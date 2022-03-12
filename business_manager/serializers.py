@@ -5,12 +5,13 @@ from .models import SysTransaction
 
 User = get_user_model()
 
-class ConsumerForeignKey(serializers.PrimaryKeyRelatedField):
+class ConsumerForeignKey(serializers.RelatedField):
 
     def get_queryset(self):
         return User.objects.filter(is_superuser=False).exclude(id=self.context['request'].user.id)
 
-
+    def to_representation(self, value):
+        return str(value)
 
 class SysTransactionSerializer(serializers.ModelSerializer):
 
