@@ -1,31 +1,17 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from .models import CreditProvider,Customer
+User = get_user_model()
 
-
-class CustomerSerializer(serializers.ModelSerializer):
-
-
-    class Meta :
-        model = Customer
-        fields = ('email','password','phone_number')
-        write_only_fields = ('password',)
-
-
-class CreditProviderSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
 
     class Meta :
-        model = CreditProvider
-        fields = ('email','password','business_name')
+        model = User
+        fields = ('user_name','password','is_staff')
         write_only_fields = ('password',)
-
-    def create(self, validated_data):
-        validated_data['is_staff'] = True
-        return super().create(validated_data)
-
 
 
 class LoginSerializers(serializers.Serializer):

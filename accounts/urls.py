@@ -1,12 +1,11 @@
 from django.urls import path
 
-from .views import CreditProviderRegisterApi,CustomerRegisterApi,LoginApi
+from .views import LoginApi,UserRegisterApi
 
 app_name = "accounts"
 
 
 urlpatterns = [
-    path('credit_provider_register/',CreditProviderRegisterApi.as_view(),name="creditproviderregister"),
-    path('customer_register/',CustomerRegisterApi.as_view(),name="customer_register"),
+    path('register/',UserRegisterApi.as_view(),name="creditproviderregister"),
     path('login/',LoginApi.as_view(),name="login")
 ]

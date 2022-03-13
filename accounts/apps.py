@@ -6,6 +6,6 @@ class AccountsConfig(AppConfig):
     name = 'accounts'
 
     def ready(self) -> None:
-        from .groups import create_credit_provider_group 
-        from .signals import give_per_to_credit_provider
+        from .groups import create_staff_group 
+        from .signals import wallet_creation_and_give_intinal_permisons_to_staff
         return super().ready()

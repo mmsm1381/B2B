@@ -7,18 +7,13 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 
-from .serializers import CustomerSerializer,CreditProviderSerializer,LoginSerializers
+from .serializers import LoginSerializers,UserSerializer
 
 
-class CustomerRegisterApi(CreateAPIView):
+class UserRegisterApi(CreateAPIView):
 
-    serializer_class = CustomerSerializer
+    serializer_class = UserSerializer
 
-
-
-class CreditProviderRegisterApi(CreateAPIView):
-
-    serializer_class = CreditProviderSerializer
 
 
 class LoginApi(APIView):

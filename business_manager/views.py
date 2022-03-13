@@ -14,5 +14,5 @@ class TransactionAPI(ListCreateAPIView):
     serializer_class = SysTransactionSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        return SysTransaction.objects.filter(Q(provider=user)|Q(consumer=user))
+        wallet = self.request.user.wallet
+        return SysTransaction.objects.filter(Q(provider=wallet)|Q(consumer=wallet))

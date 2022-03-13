@@ -7,10 +7,29 @@ from django.core.exceptions import ValidationError , BadRequest
 User = get_user_model()
 
 
+class Wallet(models.Model):
+
+    credit = models.BigIntegerField(default=0,editable=False)
+    owner = models.OneToOneField(User,on_delete=models.PROTECT)
+
+
+    def update_credit(self,amount):
+        if self.credit + amount < 0 and self.owner.is_supeuser==False:
+            raise Exception("credit cant be negetive ")
+        self.credit += amount
+        self.save()
+
+    def __str__(self) -> str:
+        return self.owner.username
+
+    def delete(self):
+        raise BadRequest("Wallet are not deletable")
+
+
 class SysTransaction(models.Model):
 
-    provider = models.ForeignKey(User,on_delete=models.PROTECT,related_name="outgoing_Transaction")
-    consumer = models.ForeignKey(User,on_delete=models.PROTECT,related_name="incoming_Transaction")
+    provider = models.ForeignKey(Wallet,on_delete=models.PROTECT,related_name="outgoing_Transaction")
+    consumer = models.ForeignKey(Wallet,on_delete=models.PROTECT,related_name="incoming_Transaction")
     amount  = models.BigIntegerField()
     date = models.DateTimeField(auto_now=True)
     status =  models.CharField(max_length=256,blank=True)
@@ -23,11 +42,11 @@ class SysTransaction(models.Model):
             raise ValidationError("porvider and consumer cant be same")
         try:
             with transaction.atomic():
-                provider = User.objects.select_for_update().get(pk=self.provider.pk)
-                consumer = User.objects.select_for_update().get(pk=self.consumer.pk)
+                provider = Wallet.objects.select_for_update().get(pk=self.provider.pk)
+                consumer = Wallet.objects.select_for_update().get(pk=self.consumer.pk)
                 consumer.update_credit(self.amount)
 
-                if not provider.is_superuser:
+                if not provider.owner.is_superuser:
                     provider.update_credit(-(self.amount))
                 self.status = "successful"
 
