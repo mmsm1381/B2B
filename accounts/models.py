@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
     
     def update_credit(self,amount):
-        if self.credit + amount < 0 :
+        if self.credit + amount < 0 and self.is_superuser==False:
             raise Exception("credit cant be negetive ")
         self.credit += amount
         self.save()

@@ -26,9 +26,7 @@ class SysTransaction(models.Model):
                 provider = User.objects.select_for_update().get(pk=self.provider.pk)
                 consumer = User.objects.select_for_update().get(pk=self.consumer.pk)
                 consumer.update_credit(self.amount)
-
-                if not provider.is_superuser:
-                    provider.update_credit(-(self.amount))
+                provider.update_credit(-(self.amount))
                 self.status = "successful"
 
         except Exception as erorr :
